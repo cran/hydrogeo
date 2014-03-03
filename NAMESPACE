@@ -1,0 +1,6 @@
+import(methods)
+import(graphics)
+exportClasses(piper)
+exportMethods(plot)
+export(piper)
+S3method(as.data.frame,piper)
