@@ -1,17 +1,24 @@
 % --- Source file: piper-class.Rd ---
 \name{piper-class}
+\Rdversion{1.1}
 \docType{class}
 \alias{piper-class}
+\alias{Axis,piper-method}
 \alias{initialize,piper-method}
+\alias{labelAxes,piper-method}
 \alias{plot,piper-method}
+\alias{points,piper-method}
+\alias{show,piper-method}
 
-\title{Class "piper" }
-\description{Major ions as percentages.}
+\title{Class \code{"piper" }}
+\description{Objects of this class are plotable as Piper-Hill diagrams.
+  A dataframe of major ions as percentages can be used to initialise a
+  piper object.
+}
 \section{Objects from the Class}{
   Objects can be created by calls of the form:
-
-  \code{new("piper", size, group, colours, numbersymbols, wt.col,
-    wt.pch, pt.col, pt.pch)}, or
+  \code{new("piper", l, call, size, group, colours, numbersymbols,
+    wt.col, wt.pch, pt.col)}, or,
   \code{piper(dataframe)}
 }
 \section{Slots}{
@@ -24,8 +31,6 @@
     \item{\code{SO4}:}{Object of class \code{vector} --- Sulphate }
     \item{\code{WaterType}:}{Object of class \code{vector} --- factor
       for grouping samples }
-    \item{\code{call}:}{Object of class \code{character} --- call
-      that created it }
     \item{\code{group}:}{Object of class \code{vector} Another way of
       grouping other than WaterType }
     \item{\code{IDs}:}{Object of class \code{vector} of sample
@@ -34,12 +39,18 @@
       points }
     \item{\code{pt.pch}:}{Object of class \code{vector} of symbols for
       points }
+     \item{\code{call}:}{Object of class \code{character} --- call
+      that created it }
   }
 }
 \section{Methods}{
   \describe{
+    \item{Axis}{\code{signature(x = "piper")}: ... }
     \item{initialize}{\code{signature(.Object = "piper")}: ... }
+    \item{labelAxes}{\code{signature(x = "piper")}: ... }
     \item{plot}{\code{signature(x = "piper")}: ... }
+    \item{points}{\code{signature(o = "piper")}: ... }
+    \item{show}{\code{signature(object = "piper")}: ... }
 	 }
 }
 \references{
@@ -74,4 +85,4 @@ plot( p, main="Piper-Hill Diagram of Water Quality" )
 }
 
 \keyword{classes}
-\keyword{hplot}
+%% \keyword{hplot}

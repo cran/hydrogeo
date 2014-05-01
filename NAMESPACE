@@ -1,5 +1,5 @@
 import(methods)
-import(graphics)
+importFrom("graphics", plot, points, Axis)
 exportClasses(piper)
 exportMethods(plot)
 export(piper)

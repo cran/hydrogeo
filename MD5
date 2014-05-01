@@ -1,9 +1,10 @@
-2aa05dcec67395dcbd616e5e9e8db00b *DESCRIPTION
+ef2f501083484e2365c048ea8556b838 *DESCRIPTION
 7d40af02629852d1b50d687f83ddf20b *LICENCE
-f9d6eb2ddd5e2254e98fcc07994e5836 *NAMESPACE
-dc8207e5bf2e282d6cd39862c401d59c *R/hydrogeo.R
-fb7b3b8d54ed4bc2c82ba19260fba6af *data/zaporozec.rda
+a5e7f0ee591cbabd26967b3cd5fe6f2c *NAMESPACE
+52b2f0e3a18c5e2b24d937aac70c54f1 *NEWS
+bcfb6b0538fe0710bd0f7de61929cd44 *R/hydrogeo.R
+c48ee895891f4880bf240a9c9879e90a *data/zaporozec.rda
 f97dba5de3bc8452de6528bad6881106 *man/hydrogeo.Rd
-c564bc7a43711fc89ebde5d23ccb60a1 *man/piper-class.Rd
+5010d6d8836f4adcb8a1b928b15e68e4 *man/piper-class.Rd
 d7dbcae1d811389315b52fce148de31f *man/piper.Rd
-ae604c7cdb2535928ed2993e98428576 *man/zaporozec.Rd
+e57cd43298d6dab1b96ab31ef6be984b *man/zaporozec.Rd

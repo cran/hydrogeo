@@ -1,0 +1,7 @@
+* Version 0.2-3
+
+- fixed a bug whereby cex parameter could not be used
+
+* Version 0.2-2
+
+- major rewrite as S4 classes

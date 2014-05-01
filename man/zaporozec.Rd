@@ -39,6 +39,5 @@
 \examples{
 data(zaporozec)
 str(zaporozec)
-plot(zaporozec)
 }
 \keyword{datasets}

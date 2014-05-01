@@ -126,7 +126,7 @@ plotpaper =
     r <- (x@size/22)
 
     plot.default(0, 0, type="n", axes=xyaxes, lty=1, lwd=1,
-                 cex=TRUE, xlim=c(0, x@size + p), ylim=c(-p, x@size),
+                 xlim=c(0, x@size + p), ylim=c(-p, x@size),
                  frame.plot=FALSE, ann=TRUE, ylab="", xlab="", ...)
     if(is.null(main))
         main <- x@call
@@ -368,11 +368,12 @@ setMethod(
   }
   )
 
+
 setMethod(
           f="plot",
           signature="piper",
-          definition=function(x, y, axes=TRUE, points=TRUE, cex.axis=0.7,
-                              cex.lab=0.5, xyaxes=FALSE, side=-1, ...)
+          definition=function(x, y, ..., axes=TRUE, points=TRUE, cex.axis=0.7,
+                              cex.lab=0.5, xyaxes=FALSE, side=-1)
                                         # group=NULL,
           {
             plotpaper(x, xyaxes=xyaxes, ...)
@@ -387,7 +388,7 @@ setMethod(
             if ( points ) {
               by(x, x@WaterType,
                  function(j, ...) {
-                     points(x,j)
+                     points(x,j,...)
                  },
                  x, ... )
             }
