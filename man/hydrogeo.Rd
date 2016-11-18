@@ -6,11 +6,33 @@
 \alias{hydrogeo-package}
 \title{Groundwater data presentation and interpretation.}
 \description{
-Contains one function for drawing Piper (or Piper-Hill) diagrams
-from water analyses for major ions.
+Contains one function, for drawing Piper (or Piper-Hill) diagrams
+from water analyses for major ions, and a dataset from Zaporozec
+}
+\details{
+\tabular{ll}{
+Package: \tab hydrogeo\cr
+Type: \tab Package\cr
+Version: \tab 0.4-1\cr
+Date: \tab 2016-07-09\cr
+License: \tab BSD\cr
+LazyLoad: \tab yes\cr
+}
+}
+\examples{
+library(hydrogeo)
+data(zaporozec)
+zaporozec$CO3 <- rep(0,9) # toPercent expects CO3
+zaporozec$Na <- rep(0,9)  # toPercent expects Na
+z <- toPercent(zaporozec)
+pz <- piper(z)
+plot(pz,cex=1.5)
 }
 \author{
 Myles English \email{myles@rockhead.biz}
+}
+\seealso{
+\code{\link{piper}} and \code{\link{toPercent}} \code{\link{zaporozec}}
 }
 \keyword{groundwater}
 \keyword{hydrogeology}

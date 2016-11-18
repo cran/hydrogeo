@@ -14,7 +14,7 @@
 
 \S4method{labelAxes}{piperplot}(x, cex.axis = 0.35, side = -1, ...)
 
-\S4method{plot}{piper}(x, type = "p", ...)
+\S4method{plot}{piper}(x, type = "p", cex = 0.75, ...)
 
 \S4method{show}{piper}(object)
 }
@@ -42,6 +42,9 @@ to the current setting of 'cex', see help("par")}
 
 \item{type}{what type of plot should be drawn, only "p" for *p*oints is useful}
 
+\item{cex}{magnification to be used for symbols relative
+to the current setting of 'cex', see help("par")}
+
 \item{object}{an object of class piper}
 }
 \description{
@@ -52,7 +55,7 @@ major ions as percentages can be used to initialise a piper object.
 \itemize{
 \item \code{initialize}: Initialiser
 
-\item \code{labelAxes}: Lable the axes
+\item \code{labelAxes}: Label the axes
 
 \item \code{plot}: Plot an object of class \code{piper}
 
@@ -105,6 +108,8 @@ l <- list( Ca = c(43,10,73,26,32),
 
 lp <- piper(l)
 plot( lp, main="Piper-Hill Diagram of Water Quality" )
+lp <- piper(l)
+plot( lp, main="Piper-Hill Diagram of Water Quality", cex=1.4 )
 }
 \author{
 Myles English \email{myles@rockhead.biz}

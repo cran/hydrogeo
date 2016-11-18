@@ -14,4 +14,7 @@ piper(d, ...)
 \description{
 Create a new piper object
 }
+\seealso{
+\code{\link{piper-class}} and \code{\link{toPercent}}
+}
 

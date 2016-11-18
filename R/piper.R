@@ -39,7 +39,6 @@ toPercent <- function(d){
     d$Mg <- 100 * (d$Mg / totalCations)
     d$Na <- 100 * (d$Na / totalCations)
     d$K <- 100 * (d$K / totalCations)
-    
     totalAnions<- d$Cl + d$SO4 + d$CO3 + d$HCO3
     d$Cl <- 100 * (d$Cl / totalAnions)
     d$SO4 <- 100 * (d$SO4 / totalAnions)
@@ -260,6 +259,7 @@ setMethod(f="initialize",
 #'
 #' @param d list passed to class piper, \code{\linkS4class{piper}}
 #' @param ... additional arguments, as for \code{\linkS4class{piper}}
+#' @seealso \code{\link{piper-class}} and \code{\link{toPercent}}
 #' @export
 piper <- function(d, ...){
     new("piper", d, call=sys.call(), ...)
@@ -399,7 +399,7 @@ setGeneric (
     standardGeneric("labelAxes")
     )
 
-#' @describeIn piper Lable the axes
+#' @describeIn piper Label the axes
 #' @param x an object of class piperplot
 #' @param cex.axis magnification to be used for axis annotation relative
 #' to the current setting of 'cex', see help("par")
@@ -515,11 +515,16 @@ setMethod(
 
 #' @describeIn piper Plot an object of class \code{piper}
 #' @param type what type of plot should be drawn, only "p" for *p*oints is useful
+#' @param cex magnification to be used for symbols relative
+#' to the current setting of 'cex', see help("par")
 #' @importFrom graphics points.default
+#' @examples
+#' lp <- piper(l)
+#' plot( lp, main="Piper-Hill Diagram of Water Quality", cex=1.4 )
 setMethod(
     f="plot",
     signature(x = "piper"),
-    function(x, type = "p", ...) # group=NULL,
+    function(x, type = "p", cex=0.75, ...) # group=NULL,
         {
             ##if( ! x@plotted ){ callNextMethod() }
             callNextMethod() # calls piperplot.plot()
@@ -530,7 +535,7 @@ setMethod(
                      px <- c(j$anion.x, j$cation.x, j$diamond.x)
                      py <- c(j$anion.y, j$cation.y, j$diamond.y)
                      points.default(px, py, type="p", lty=1, lwd=1, pch=j$pt.pch,
-                                    col=j$pt.col, bg=NA, cex=0.75, ...)
+                                    col=j$pt.col, bg=NA, cex=cex, ...)
                  },
                  x, ... )
           }
