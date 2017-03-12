@@ -17,4 +17,3 @@
 \description{
 Plot the diagram area with two triangles and a diamond
 }
-

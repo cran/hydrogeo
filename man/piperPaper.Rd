@@ -19,4 +19,3 @@ library(hydrogeo)
 p = piperPaper(size=1)
 plot(p)
 }
-

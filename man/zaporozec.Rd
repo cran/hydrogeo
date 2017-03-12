@@ -32,4 +32,3 @@ data(zaporozec)
 str(zaporozec)
 }
 \keyword{datasets}
-

@@ -2,15 +2,14 @@
 % Please edit documentation in R/piper.R
 \docType{class}
 \name{piper-class}
+\alias{piper-class}
 \alias{initialize,piper-method}
 \alias{labelAxes,piperplot-method}
-\alias{piper-class}
 \alias{plot,piper-method}
 \alias{show,piper-method}
 \title{Class \code{piper}}
 \usage{
-\S4method{initialize}{piper}(.Object, l, ..., call = NULL, group = NULL,
-  wt.col = NULL, pt.col = NULL)
+\S4method{initialize}{piper}(.Object, l, ..., call = NULL, pt.col = NULL)
 
 \S4method{labelAxes}{piperplot}(x, cex.axis = 0.35, side = -1, ...)
 
@@ -26,10 +25,6 @@
 \item{...}{additional arguments, as for \code{\linkS4class{piper}}}
 
 \item{call}{the call that asked for the new piper object}
-
-\item{group}{(untested) Object of class \code{vector}, a second factor to group by, to allow plotting on different plots}
-
-\item{wt.col}{(untested) Water type colours}
 
 \item{pt.col}{Object of class \code{vector} of colours for points}
 
@@ -61,6 +56,7 @@ major ions as percentages can be used to initialise a piper object.
 
 \item \code{show}: Show an object of class \code{piper}
 }}
+
 \section{Slots}{
 
 \describe{
@@ -71,8 +67,6 @@ major ions as percentages can be used to initialise a piper object.
 \item{\code{Cl}}{Object of class \code{vector} --- Chloride}
 
 \item{\code{SO4}}{Object of class \code{vector} --- Sulphate}
-
-\item{\code{WaterType}}{Object of class \code{vector} --- factor for grouping samples}
 
 \item{\code{anion.x}}{x coordinate of the point on the anion triangle (internal)}
 
@@ -86,8 +80,6 @@ major ions as percentages can be used to initialise a piper object.
 
 \item{\code{diamond.y}}{y coordinate of the point on the anion diamond (internal)}
 
-\item{\code{group}}{Object of class \code{vector} Another way of grouping other than WaterType}
-
 \item{\code{IDs}}{Object of class \code{vector} of sample identifiers}
 
 \item{\code{pt.col}}{Object of class \code{vector} of colours for points}
@@ -96,27 +88,30 @@ major ions as percentages can be used to initialise a piper object.
 
 \item{\code{call}}{Object of class \code{character} --- call that created it}
 }}
+
 \examples{
 showClass("piper")
 
 l <- list( Ca = c(43,10,73,26,32),
            Mg = c(30,50,3,14,12),
            Cl = c(24,10,12,30,43),
-           SO4 = c(24,10,12,30,43),
-           WaterType = c(2,2,1,2,3),
-           IDs = c("A","B","C","D","E") )
+           SO4 = c(24,10,12,30,43))
 
 lp <- piper(l)
 plot( lp, main="Piper-Hill Diagram of Water Quality" )
-lp <- piper(l)
+
+# change symbols and colours to differentiate water type groups
+lp@pt.pch = c(2,2,4,4,4)
+lp@pt.col = c(0,1,0,1,2)
+
+# use larger symbols
 plot( lp, main="Piper-Hill Diagram of Water Quality", cex=1.4 )
-}
-\author{
-Myles English \email{myles@rockhead.biz}
 }
 \references{
 A. Zaporozec, ``Graphical interpretation of water quality
 data,'' Ground Water 10, no. 2 (1972): 32--43.
 }
+\author{
+Myles English \email{myles@rockhead.biz}
+}
 \keyword{classes}
-

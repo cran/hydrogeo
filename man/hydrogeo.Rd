@@ -13,8 +13,8 @@ from water analyses for major ions, and a dataset from Zaporozec
 \tabular{ll}{
 Package: \tab hydrogeo\cr
 Type: \tab Package\cr
-Version: \tab 0.4-1\cr
-Date: \tab 2016-07-09\cr
+Version: \tab 0.5-1\cr
+Date: \tab 2016-11-17\cr
 License: \tab BSD\cr
 LazyLoad: \tab yes\cr
 }
@@ -28,15 +28,14 @@ z <- toPercent(zaporozec)
 pz <- piper(z)
 plot(pz,cex=1.5)
 }
-\author{
-Myles English \email{myles@rockhead.biz}
-}
 \seealso{
 \code{\link{piper}} and \code{\link{toPercent}} \code{\link{zaporozec}}
+}
+\author{
+Myles English \email{myles@rockhead.biz}
 }
 \keyword{groundwater}
 \keyword{hydrogeology}
 \keyword{hydrology}
 \keyword{package}
 \keyword{water}
-

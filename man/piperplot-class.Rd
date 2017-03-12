@@ -2,8 +2,8 @@
 % Please edit documentation in R/piper.R
 \docType{class}
 \name{piperplot-class}
-\alias{Axis,piperplot-method}
 \alias{piperplot-class}
+\alias{Axis,piperplot-method}
 \title{Class \code{piperplot}}
 \usage{
 \S4method{Axis}{piperplot}(x = NULL)
@@ -19,6 +19,7 @@ diagrams
 \itemize{
 \item \code{Axis}: Add axes to a piperplot
 }}
+
 \section{Slots}{
 
 \describe{

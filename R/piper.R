@@ -25,7 +25,6 @@ NULL
 #'           SO4 = c(24,10,12,30,43),
 #' 	  CO3 = c(24,10,12,30,43),
 #' 	  HCO3 = c(42,110,12,3,4),
-#'           WaterType = c(2,2,1,2,3),
 #'           IDs = c("A","B","C","D","E") )
 #' d <- toPercent(l)
 #' # check, should add up to 100%
@@ -39,12 +38,29 @@ toPercent <- function(d){
     d$Mg <- 100 * (d$Mg / totalCations)
     d$Na <- 100 * (d$Na / totalCations)
     d$K <- 100 * (d$K / totalCations)
+
     totalAnions<- d$Cl + d$SO4 + d$CO3 + d$HCO3
     d$Cl <- 100 * (d$Cl / totalAnions)
     d$SO4 <- 100 * (d$SO4 / totalAnions)
     d$CO3 <- 100 * (d$CO3 / totalAnions)
     d$HCO3 <- 100 * (d$HCO3 / totalAnions)
     return(d)
+}
+
+#' Major ions as a percentage of total major ions - Test Data
+#'
+#' @param n Number of test samples to be generated.
+#' @importFrom stats runif
+#' @examples
+#' library(hydrogeo)
+#' lp <- piper( testData(26) )
+#' @export
+testData <- function(n) {
+      Ca <- runif(n, 0, 100)
+      Mg <- runif(n, 0, 100-Ca)
+      Cl <- runif(n, 0, 100)
+      SO4 <- runif(n, 0, 100-Cl)
+      list(Ca=Ca, Mg=Mg, Cl=Cl, SO4=SO4)
 }
 
 #' Class \code{piperplot}
@@ -71,14 +87,12 @@ setClass("piperplot",
 #' @slot Mg Object of class \code{vector} --- Magnesium
 #' @slot Cl Object of class \code{vector} --- Chloride
 #' @slot SO4 Object of class \code{vector} --- Sulphate
-#' @slot WaterType Object of class \code{vector} --- factor for grouping samples
 #' @slot anion.x x coordinate of the point on the anion triangle (internal)
 #' @slot anion.y y coordinate of the point on the anion triangle (internal)
 #' @slot cation.x x coordinate of the point on the cation triangle (internal)
 #' @slot cation.y y coordinate of the point on the cation triangle (internal)
 #' @slot diamond.x x coordinate of the point on the diamond (internal)
 #' @slot diamond.y y coordinate of the point on the anion diamond (internal)
-#' @slot group Object of class \code{vector} Another way of grouping other than WaterType
 #' @slot IDs Object of class \code{vector} of sample identifiers
 #' @slot pt.col Object of class \code{vector} of colours for points
 #' @slot pt.pch Object of class \code{vector} of symbols for  points
@@ -93,9 +107,7 @@ setClass("piperplot",
 #' l <- list( Ca = c(43,10,73,26,32),
 #'            Mg = c(30,50,3,14,12),
 #'            Cl = c(24,10,12,30,43),
-#'            SO4 = c(24,10,12,30,43),
-#'            WaterType = c(2,2,1,2,3),
-#'            IDs = c("A","B","C","D","E") )
+#'            SO4 = c(24,10,12,30,43))
 #'
 #' lp <- piper(l)
 #' plot( lp, main="Piper-Hill Diagram of Water Quality" )
@@ -118,11 +130,9 @@ setClass("piper",
                         Mg="vector",
                         Cl="vector",
                         SO4="vector",
-                        WaterType="vector",
-                        group="vector",     # TODO: make a factor
                         IDs="vector",       # NOTE: row.names changed to IDs
-                        pt.col="vector",    # colours for WaterType
-                        pt.pch="vector",    # symbols for WaterType
+                        pt.col="vector",
+                        pt.pch="vector",
              anion.x="vector",
              anion.y="vector",
              cation.x="vector",
@@ -137,26 +147,16 @@ cationy = function (Mg, size) { c(Mg * 5 * size/1100) }
 cationx = function (Ca, Mg, size) { c((5 * size/11) * (1 - (Ca/100) - (Mg/200))) }
 
 #' @describeIn piper Initialiser
-# @watertype should be the first factor
-# @group - should be the second factor, to allow plotting on different plots
-# when there are a lot of points but the colours and symbols need to be
-# preserved between plots.
-# i.e. col and pch by @WaterType
-#      plot by @group
-# WaterTypes is shown by colour
 # Sample ID is shown by colour and pch via legend with IDs
 #' @param .Object object of class piper
 #' @param l list of data, see 'Examples' below
 # as per \code{\linkS4class{piper}}
 #' @param ... additional arguments, as for \code{\linkS4class{piper}}
 #' @param call the call that asked for the new piper object
-#' @param group (untested) Object of class \code{vector}, a second factor to group by, to allow plotting on different plots
-#' @param wt.col (untested) Water type colours
 #' @param pt.col Object of class \code{vector} of colours for points
 setMethod(f="initialize",
           signature(.Object = "piper"),
-          function(.Object, l, ..., call=NULL,
-                   group=NULL, wt.col=NULL, pt.col=NULL)
+          function(.Object, l, ..., call=NULL, pt.col=NULL)
           {
             #TODO: test these checks work
             if ( any((l$Ca + l$Mg)>100) ) {
@@ -173,70 +173,24 @@ setMethod(f="initialize",
             if ( !is.null(l$pt.pch) ) {
                 .Object@pt.pch <- l$pt.pch
             } else {
-                .Object@pt.pch <- rep_len( 0:25, length(row.names(l)) )
+                .Object@pt.pch <- rep_len( 0:25, length(l$Ca) )
             }
-            if ( !is.null(l$group) ) {
-                .Object@group <- group
-            } else { # plot all samples on the same plot
-                .Object@group <- rep( 1, times=length(l$Ca) )
+            if ( !is.null(l$pt.col) ) {
+                .Object@pt.col <- l$pt.col
+            } else {
+                .Object@pt.col <- rep_len( 0:25, length(l$Ca) )
             }
-            if ( !is.null(l$WaterType) ) {
-                .Object@WaterType <- l$WaterType
-            } else { # treat each sample as an individual water type
-                .Object@WaterType <- seq( 1:length(row.names(l)) )
-            }
+
             if ( !is.null(l$IDs) ) {
                 .Object@IDs <- l$IDs
             } else {
-                .Object@IDs <- row.names(l)
-            }
-            # TODO: make this less confusing
-            # make the colours and symbols for the points now
-            # because it saves confusion later
-            # wt.col and wt.pch should be factors (?)
-            # pt.col and pt.pch should be vectors
-            # pt. overides wt.
-          
-            # set pt.col
-            if ( ! is.null( l$pt.col ) ) {        # if specified
-              .Object@pt.col <- l$pt.col          # assign it
-            } else {                              # else calculate it...
-              wtf <- as.factor(.Object@WaterType)
-              if ( ! is.null( l$wt.col ) ) {
-                if ( length(l$wt.col) != length( levels(wtf) ) ) {
-                  cat("ERROR: wt.col wrong length for WaterType!")
-                  return(invisible())
-                } else { levels(wtf) <- l$wt.col }
-              } else {  # the default for pt.col
-                levels( wtf ) <- seq( 1:length(levels(wtf)) )
-              }
-              .Object@pt.col <- as.vector( wtf )
+                if ( !is.null(row.names(l)) ) {
+                    .Object@IDs <- row.names(l)
+                } else {
+                    .Object@IDs <- seq(1,length(l$Ca))
+                    }
             }
 
-            # set pt.pch
-            # input wt:      2 2 1 2 3
-            # output pt.col  2 2 1 2 3
-            #        pt.pch  1 2 1 3 1
-            if ( ! is.null( l$pt.pch ) ) {             # if specified
-              .Object@pt.pch <- l$pt.pch               # assign it
-            } else {                                   # else calculate it...
-              wtf <- as.factor(.Object@WaterType)
-              .Object@pt.pch <- .Object@WaterType                 # initialise
-              ## if ( ! is.null( l$wt.pch ) ) {
-##               for ( i in levels(wtf) ) {
-##                  # get subset , replace with values from vector
-##                  lrp<-sum( wtf==i ) # the number of samples of that watertype
-##                  pch[ wtf==i ] <- l$wt.pch[1:lrp]
-##                }
-##              } else {
-##                # loop through levels
-##                for ( i in levels(wtf) ) {
-##                  lrp<-sum( wtf==i ) # the number of samples of that watertype
-##                  pch[ wtf==i ] <- seq(lrp)
-##                }
-##              }
-           ###   .Object@pt.pch <- pch                 # assign
-          }
             .Object@call <- call
 
             callNextMethod(.Object, ...)   # to fill 'size'
@@ -288,7 +242,7 @@ piperPaper <- function(size=NULL, ...){
 setMethod(
     f="plot",
     signature(x = "piperplot"),
-        function(x, axes = TRUE, ...) # group=NULL,
+        function(x, axes = TRUE, ...)
         {
             p <- (x@size/11)
             r <- (x@size/22)
@@ -519,29 +473,35 @@ setMethod(
 #' to the current setting of 'cex', see help("par")
 #' @importFrom graphics points.default
 #' @examples
-#' lp <- piper(l)
+#' 
+#' # change symbols and colours to differentiate water type groups
+#' lp@pt.pch = c(2,2,4,4,4)
+#' lp@pt.col = c(0,1,0,1,2)
+#' 
+#' # use larger symbols
 #' plot( lp, main="Piper-Hill Diagram of Water Quality", cex=1.4 )
 setMethod(
     f="plot",
     signature(x = "piper"),
-    function(x, type = "p", cex=0.75, ...) # group=NULL,
-        {
-            ##if( ! x@plotted ){ callNextMethod() }
-            callNextMethod() # calls piperplot.plot()
+    function(x, type = "p", cex=0.75, ...)
+    {
+        ##if( ! x@plotted ){ callNextMethod() }
+        callNextMethod() # calls piperplot.plot()
 
-            if ( type == "p" ) { # i.e. 'points'
-              by(x, x@WaterType,
-                 function(j, ...) {
-                     px <- c(j$anion.x, j$cation.x, j$diamond.x)
-                     py <- c(j$anion.y, j$cation.y, j$diamond.y)
-                     points.default(px, py, type="p", lty=1, lwd=1, pch=j$pt.pch,
-                                    col=j$pt.col, bg=NA, cex=cex, ...)
-                 },
-                 x, ... )
-          }
-            invisible()
-          }
-          )
+        if ( type == "p" ) { # i.e. 'points'
+            by(x, x@pt.col,
+               function(j, ...) {
+                   px <- c(j$anion.x, j$cation.x, j$diamond.x)
+                   py <- c(j$anion.y, j$cation.y, j$diamond.y)
+                   points.default(px, py, type="p", lty=1, lwd=1, pch=j$pt.pch,
+                                  col=j$pt.col, bg=NA, cex=cex, ...)
+               },
+               x, ... )
+        }
+        invisible()
+        return(TRUE) # for tests
+    }
+)
 
 # Coercion functions
 #' @export
@@ -549,8 +509,7 @@ as.data.frame.piper =
   function (x, ...)
   {
     as.data.frame.list( list( IDs=x@IDs, Ca=x@Ca, Mg=x@Mg, Cl=x@Cl,
-                             SO4=x@SO4, group=x@group, WaterType=x@WaterType,
-                             pt.pch=x@pt.pch, pt.col=x@pt.col,
+                             SO4=x@SO4, pt.pch=x@pt.pch, pt.col=x@pt.col,
                              anion.x=x@anion.x, anion.y=x@anion.y,
                              cation.x=x@cation.x, cation.y=x@cation.y,
                              diamond.x=x@diamond.x, diamond.y=x@diamond.y ) )
@@ -559,9 +518,9 @@ as.data.frame.piper =
 
 # TODO: work on this
 
-# @describeIn piper For checking the validity of an object of class \code{piper}
-# @param object an object of class piper
-# @name setValidity
+# describeIn piper For checking the validity of an object of class \code{piper}
+# param object an object of class piper
+# name setValidity
 
 #' @noRd
 setValidity("piper",
@@ -581,10 +540,8 @@ setValidity("piper",
               
                 if (length(i) != object@Ca) {
                   stop("ERROR: lengths of items differ") }
-                if (nme != "IDs" && nme != "WaterType") {
-                #print(nme)
+                if (nme != "IDs") {
                   for (j in i) {
-                    #print(paste("j=",j))
                     if ( ! is.numeric(j) || j < 1)
                       stop("ERROR: there is a non-numeric or negative number")
                   }
